@@ -1,2 +1,2 @@
 # TAMUHack2023
-Repo for Hackathon
+Repo for the Spring TAMU Hackathon 2023

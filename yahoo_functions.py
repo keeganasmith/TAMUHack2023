@@ -46,6 +46,3 @@ def get_Total_Avg_Yearly_Growth(list_items):
         total_growth += get_Avg_Yearly_Growth(list_items[i][0])*percentage_list[i]
 
     return total_growth
-
-stock_list = [["AAPL",300],["MSFT",200]]
-print(get_Total_Avg_Yearly_Growth(stock_list))

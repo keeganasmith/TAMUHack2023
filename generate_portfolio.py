@@ -53,5 +53,10 @@ def get_best_portfolio(number, num_stocks = 50):
         if(growth > joe[0][0]):
             hq.heappop(joe)
             hq.heappush(joe, (growth, stock))
-    return joe
-print(get_best_portfolio(10, 50));
+    output = []
+    for tup in joe:
+        output.append([tup[1], 100])
+    return output
+result = get_best_portfolio(10, 15);
+sharpe = risk.sharpe(result)[0]
+print(stock_growth.bruh(sharpe))

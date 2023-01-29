@@ -70,7 +70,7 @@ def excess_returns(a, b):
     return returns
 #Takes an array of pairs, [stock name, amount]
 #returns the sharpe value relative to the S&P 500
-def sharpe(portfolio, period = '2y'):
+def sharpe(portfolio, period = '3mo'):
     PERIOD_1 = period
     # print(average(result))
     portfolio_totals = get_total(portfolio)

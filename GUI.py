@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import yahoo_functions as yahoo
 import risk as rk
+import bonds_risk as br
 
 # Creation of root window and stock array
 root = Tk()
@@ -102,19 +103,31 @@ def deleteStock():
 stockAddButton = Button(stockFrame, text = "Add stock", command = lambda : addStock(stockNameEntry.get(), stockAmountEntry.get()))
 stockDeleteButton = Button(stockFrame, text = "Delete stock", command = deleteStock)
 
-stockNameEntry = Entry(stockFrame, width = 36)
-stockNameEntry.pack()
+Grid.rowconfigure(stockFrame,0,weight=1)
+Grid.columnconfigure(stockFrame,0,weight=1)
+Grid.rowconfigure(stockFrame,1,weight=1)
+Grid.columnconfigure(stockFrame,1,weight=1)
+
+
+stockNameLabel = Label(stockFrame, text = "Stock Name: ")
+stockNameLabel.grid(row = 0, column = 0)
+
+stockNameEntry = Entry(stockFrame, width = 18)
+stockNameEntry.grid(row = 0, column = 1)
 stockNameEntry.insert(0, "Enter Stock name")
 
-stockAmountEntry = Entry(stockFrame, width = 36)
-stockAmountEntry.pack()
+stockAmountLabel = Label(stockFrame, text = "Stock Amount: ")
+stockAmountLabel.grid(row = 1, column = 0)
+
+stockAmountEntry = Entry(stockFrame, width = 18)
+stockAmountEntry.grid(row = 1, column = 1)
 stockAmountEntry.insert(0, "Enter Stock amount")
 
-stockAddButton.pack()
-stockDeleteButton.pack()
+stockAddButton.grid(row = 2, column = 0)
+stockDeleteButton.grid(row = 2, column = 1)
 
 stockTree.pack()
-stockListFrame.pack()
+stockListFrame.grid(row = 3, column = 0, columnspan = 3)
 
 #List of bonds
 bondListFrame = LabelFrame(bondFrame, highlightthickness=0, borderwidth = 0)
@@ -127,13 +140,13 @@ bondTree.column("# 1", anchor=CENTER)
 bondTree.heading("# 1", text="Name")
 bondTree.column("# 2", anchor=CENTER)
 bondTree.heading("# 2", text="Amount")
-bondTree.column("# 2", anchor=CENTER)
-bondTree.heading("# 2", text="Interest Rate")
+bondTree.column("# 3", anchor=CENTER)
+bondTree.heading("# 3", text="Interest Rate")
 
 
 # Addition and deletion to bond list
-def addBond(nm, amu, ir):
-    bondTree.insert('', 'end', values=(str(nm), str(amu), str(ir)))
+def addBond(nm, amu):
+    bondTree.insert('', 'end', values=(str(nm), str(amu), str(br.get_interest(nm))))
 
 def deleteBond():
     for item in reversed(bondTree.selection()):

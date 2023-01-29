@@ -39,6 +39,7 @@ def day_to_day_change(stock):
 def get_total(portfolio):
     result = [0]*len(yf.Ticker(portfolio[0][0]).history(period = PERIOD_1).to_records() )
     total_amount = 0.0;
+    min_index = len(result) - 1
     for val in portfolio:
         total_amount += val[1]
     for stock in portfolio:
@@ -48,9 +49,13 @@ def get_total(portfolio):
         i = 0
         percent = float(stock[1])/total_amount;
         for val in history_arr:
+            if(i >= len(result)):
+                break;
             result[i] += percent * val[4]
             i += 1;
-    return result
+        if(i < min_index):
+            min_index = i
+    return result[0:min_index]
 #difference, a - b
 def excess_returns(a, b):
     returns = [0] * len(a)
@@ -59,7 +64,7 @@ def excess_returns(a, b):
     return returns
 #Takes an array of pairs, [stock name, amount]
 #returns the sharpe value relative to the S&P 500
-def sharpe(portfolio, period = '5y'):
+def sharpe(portfolio, period = '2y'):
     PERIOD_1 = period
     sp_day_to_day = day_to_day_change('^GSPC')
     # print(average(result))

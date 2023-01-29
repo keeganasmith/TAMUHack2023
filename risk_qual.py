@@ -24,14 +24,14 @@ def get_qual_risk(sharpe_denom):
 
 def get_qual_performance_risk(sharpe_value):
     if sharpe_value> 3:
-        return "Excellent"
+        return "Excellent, Sharpe > 3"
     if sharpe_value > 2:
-        return "Very good"
+        return "Very good, Sharpe > 2"
     if sharpe_value > .9:
-        return "Good"
+        return "Good, Sharpe > .9"
     if sharpe_value > 0:
-        return "Mediocre"
+        return "Mediocre, Sharpe > 0"
 
-    return "Bad"
+    return "Bad, Sharpe < 0"
 
-get_qual_risk(.02)
+#get_qual_risk(.02)

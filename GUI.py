@@ -3,11 +3,14 @@ from tkinter import ttk
 import yahoo_functions as yahoo
 import risk as rk
 import bonds_risk as br
-
+import stock_growth
+import total_growth
 # Creation of root window and stock array
 root = Tk()
 stocks = []
-
+bond_amounts = []
+bond_interests = []
+sharpe = 1
 # Shrinking and growing speed of rows and columns
 Grid.rowconfigure(root,0,weight=1)
 Grid.columnconfigure(root,0,weight=2)
@@ -42,30 +45,32 @@ savingLabel.pack()
 interestLabel.pack()
 
 # Risk and Growth Label in Risk Frame
-riskLabel = Label(riskFrame, text= "Risk:")
-growthLabel = Label(riskFrame, text= "Growth:")
+growthLabel = Label(riskFrame, text= "Expected Annual Growth (taking risk into account): ")
 
-riskLabel.pack()
+
 growthLabel.pack()
 
 # Links to Calculate Button, calls function for riskStocksFrame
 def calcStock():
     if(len(stocks)!= 0):
         sr, er, rsk, perf = rk.sharpe(stocks)
-        ygrowth = yahoo.get_Total_Avg_Yearly_Growth(stocks)
+        # ygrowth = yahoo.get_Total_Avg_Yearly_Growth(stocks)
+        sharpe = sr
         # Changing of all Labels
-        annReturnLabel.config(text = "Annualized Return: " + str("%.2f" % (ygrowth*100) ) + "%")
-        sharpeRatioLabel.config(text = "Sharpe Ratio: " + str(sr))
+        sharpeRatioLabel.config(text = "Sharpe Ratio (w.r.t S&P 500): " + str(sr))
         excessReturnsLabel.config(text = "Excess Returns (w.r.t S&P 500): " + str(er))
         performanceLabel.config(text = "Performance: " + perf)
         riskLabel.config(text = "Risk: " + rsk)
+        annReturnLabel.config(text = "Expected Growth Accounting for Risk Factors: " + str(stock_growth.bruh(sharpe) * 100) + "%")
+
 
 #Labels and Buttons in riskStocksFrame
-annReturnLabel = Label(riskStockFrame, text= "Annualized Return:")
 sharpeRatioLabel = Label(riskStockFrame, text= "Sharpe Ratio:" )
 excessReturnsLabel = Label(riskStockFrame, text= "Excess Returns (w.r.t respect to S&P 500): " )
 performanceLabel = Label(riskStockFrame, text= "Performance: " )
 riskLabel = Label(riskStockFrame, text= "Risk: " )
+annReturnLabel = Label(riskStockFrame, text= "Expected Growth Accounting for Risk Factors: ")
+
 calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock)
 
 annReturnLabel.pack()
@@ -93,6 +98,7 @@ def addStock(nm, amu):
     stocks.append((str(nm), int(amu)))
 
 def deleteStock():
+
     for item in reversed(stockTree.selection()):
         itemindex = stockTree.index(item)
         #print(itemindex)
@@ -146,12 +152,18 @@ bondTree.heading("# 3", text="Interest Rate")
 
 # Addition and deletion to bond list
 def addBond(nm, amu):
-    bondTree.insert('', 'end', values=(str(nm), str(amu), str(br.get_interest(nm))))
+    inter = br.get_interest(nm)
+    bond_interests.append(inter)
+    bond_amounts.append(amu)
+    bondTree.insert('', 'end', values=(str(nm), str(amu), str(inter)))
 
 def deleteBond():
     for item in reversed(bondTree.selection()):
         itemindex = bondTree.index(item)
         bondTree.delete(item)
+    if(len(bond_interests) > 0):
+        bond_interests.pop(-1)
+        bond_amounts.pop(-1)
 
 #Entry fields for bond list
 bondAddButton = Button(bondFrame, text = "Add Bond", command = lambda : addBond(sec.get(), bondAmountEntry.get()))
@@ -199,6 +211,13 @@ setSavingsButton.pack()
 setInterestButton.pack()
 
 def calculateTotal():
+    sg = stock_growth.bruh(sharpe)
+    stock_amount= 0;
+    for i in range(0, len(stocks)):
+        stock_amount += stocks[i][1]
+    growth = total_growth.total_growth(stock_amount, sg, bond_amounts, bond_interests, saving_amount, saving_interest)
+    growthLabel.config(text = f"Expected Annual Growth (taking risk into account):\n{growth}%\n")
+
     return 0
 setCalculateTotalButton = Button(savingFrame, text = "Calculate Total", command = lambda : calculateTotal())
 setCalculateTotalButton.pack()

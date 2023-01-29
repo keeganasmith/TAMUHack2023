@@ -58,7 +58,8 @@ def excess_returns(a, b):
     return returns
 #Takes an array of pairs, [stock name, amount]
 #returns the sharpe value relative to the S&P 500
-def sharpe(portfolio):
+def sharpe(portfolio, period = '5y'):
+    PERIOD_1 = period
     sp_day_to_day = day_to_day_change('^GSPC')
     # print(average(result))
     portfolio_totals = get_total(portfolio)
@@ -74,11 +75,11 @@ def sharpe(portfolio):
     sharpe_ratio = average_excess_returns/excess_returns_sd * (len(excess_return_list)) ** .5;
     return sharpe_ratio
 #sharpe(['aapl'])
-# portfolio1 = [
-#     ['aapl', 500],
-#     ['^GSPC', 700],
-#     ['msft', 200],
-#     ['tsla', 100]
-#     ]
-#sharpe(portfolio1)
+portfolio1 = [
+    ['aapl', 500],
+    ['^GSPC', 700],
+    ['msft', 200],
+    ['tsla', 100]
+    ]
+sharpe(portfolio1)
 #ticker = yf.Ticker('aapl')

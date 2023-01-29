@@ -3,76 +3,68 @@ from tkinter import ttk
 import yahoo_functions as yahoo
 import risk as rk
 
+# Creation of root window and stock array
 root = Tk()
 stocks = []
 
-#root.geometry("%dx%d" % (root.winfo_screenwidth(), root.winfo_screenheight()))
+# Shrinking and growing speed of rows and columns
+Grid.rowconfigure(root,0,weight=1)
+Grid.columnconfigure(root,0,weight=2)
+Grid.rowconfigure(root,1,weight=1)
+Grid.columnconfigure(root,1,weight=2)
+Grid.rowconfigure(root,2,weight=1)
+Grid.columnconfigure(root,2,weight=1)
+Grid.rowconfigure(root,3,weight=1)
+Grid.columnconfigure(root,3,weight=1)
 
-# root.geometry("1920x1080")
+#Creating of all smaller frames
+stockFrame = LabelFrame(root)
+bondFrame = LabelFrame(root)
+savingFrame = LabelFrame(root)
+riskStockFrame = LabelFrame(root)
+riskBondFrame = LabelFrame(root)
+riskFrame = LabelFrame(root)
 
-enterFrame = LabelFrame(root, highlightthickness=0, borderwidth = 0)
-enterFrame.pack()
+#Positioning of frames into grid
+stockFrame.grid(row=0,column=0, rowspan = 2, sticky= "NSEW")
+bondFrame.grid(row=0,column=1, rowspan = 2, sticky= "NSEW")
+savingFrame.grid(row=0, column = 2, rowspan= 2, sticky = "NSEW")
+riskStockFrame.grid(row=2, column = 0, sticky = "NSEW")
+riskBondFrame.grid(row=2, column = 1, sticky = "NSEW")
+riskFrame.grid(row=2, column = 2, sticky = "NSEW")
 
-# wdth = root.winfo_width()
-# hght = root.winfo_height()
-
-# print(wdth)
-# print(hght)
-
-wdth = root.winfo_screenwidth()
-hght = root.winfo_screenheight()
-root.geometry("%dx%d" % (wdth, hght))
-
-#root.update_idletasks()
-#print(wdth)
-#print(hght)
-
-stockBigFrame = LabelFrame(enterFrame, height= hght, width= wdth/3)
-stockFrame = LabelFrame(stockBigFrame, height= 4*hght/5, width= wdth/3)
-bondFrame = LabelFrame(enterFrame, height= hght, width= wdth/3)
-savingFrame = LabelFrame(enterFrame, height= 4*hght/5, width= wdth/3)
-riskStockFrame = LabelFrame(stockBigFrame, height= hght/5, width= wdth/3)
-riskFrame = LabelFrame(enterFrame, height= hght/5, width= wdth/3)
-
+# Savings and Interest Label in Saving Frame
 savingLabel = Label(savingFrame, text= "Savings: $0")
 interestLabel = Label(savingFrame, text= "Interest: 0%")
 
+savingLabel.pack()
+interestLabel.pack()
+
+# Risk and Growth Label in Risk Frame
 riskLabel = Label(riskFrame, text= "Risk:")
 growthLabel = Label(riskFrame, text= "Growth:")
 
-#timeChoice = StringVar()
-#timeMenu = OptionMenu(riskStockFrame, timeChoice, "6 Months", "1 Year", "2 Years", "5 Years")
+riskLabel.pack()
+growthLabel.pack()
 
+# Links to Calculate Button, calls function for riskStocksFrame
 def calcStock():
-    ftime = ""
     if(len(stocks)!= 0):
-        # if(timeChoice.get() == "6 Months"):
-        #      ftime = '6mo'
-        # if(timeChoice.get() == "1 Year"):
-        #      ftime = '1y'
-        # if(timeChoice.get() == "2 Years"):
-        #      ftime = '2y'
-        # if(timeChoice.get() == "5 Years"):
-        #      ftime = '5y'
-        #print("Ftime: ", ftime)
         sr, er, rsk, perf = rk.sharpe(stocks)
         ygrowth = yahoo.get_Total_Avg_Yearly_Growth(stocks)
+        # Changing of all Labels
         annReturnLabel.config(text = "Annualized Return: " + str("%.2f" % (ygrowth*100) ) + "%")
         sharpeRatioLabel.config(text = "Sharpe Ratio: " + str(sr))
         excessReturnsLabel.config(text = "Excess Returns (in respect to S&P 500): " + str(er))
         performanceLabel.config(text = "Performance: " + perf)
         riskLabel.config(text = "Risk: " + rsk)
 
-
-
-    
+#Labels and Buttons in riskStocksFrame
 annReturnLabel = Label(riskStockFrame, text= "Annualized Return:")
 sharpeRatioLabel = Label(riskStockFrame, text= "Sharpe Ratio:" )
 excessReturnsLabel = Label(riskStockFrame, text= "Excess Returns (in respect to S&P 500): " )
 performanceLabel = Label(riskStockFrame, text= "Performance: " )
 riskLabel = Label(riskStockFrame, text= "Risk: " )
-
-
 calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock)
 
 annReturnLabel.pack()
@@ -80,21 +72,10 @@ sharpeRatioLabel.pack()
 excessReturnsLabel.pack()
 riskLabel.pack()
 performanceLabel.pack()
-#timeMenu.pack()
 calculateButton.pack()
 
-riskLabel.pack()
-growthLabel.pack()
-
+#List of stocks
 stockListFrame = LabelFrame(stockFrame, highlightthickness=0, borderwidth = 0)
-
-stockBigFrame.pack_propagate(False)
-stockFrame.pack_propagate(False)
-riskStockFrame.pack_propagate(False)    
-bondFrame.pack_propagate(False)
-savingFrame.pack_propagate(False)
-riskFrame.pack_propagate(False)
-
 stockScroll = Scrollbar(stockListFrame, orient=VERTICAL)
 stockTree = ttk.Treeview(stockListFrame, column=("Name", "Amount"), show='headings', height=5, yscrollcommand= stockScroll.set, selectmode = EXTENDED)
 stockScroll.config(command = stockTree.yview)
@@ -105,18 +86,7 @@ stockTree.heading("# 1", text="Name")
 stockTree.column("# 2", anchor=CENTER)
 stockTree.heading("# 2", text="Amount")
 
-bondListFrame = LabelFrame(bondFrame, highlightthickness=0, borderwidth = 0)
-
-bondScroll = Scrollbar(bondListFrame, orient=VERTICAL)
-bondTree = ttk.Treeview(bondListFrame, column=("Name", "Amount"), show='headings', height=5, yscrollcommand= bondScroll.set, selectmode = EXTENDED)
-bondScroll.config(command = bondTree.yview)
-bondScroll.pack(side = RIGHT, fill= Y)
-
-bondTree.column("# 1", anchor=CENTER)
-bondTree.heading("# 1", text="Name")
-bondTree.column("# 2", anchor=CENTER)
-bondTree.heading("# 2", text="Amount")
-
+# Addition and deletion of stock list
 def addStock(nm, amu):
     stockTree.insert('', 'end', values=(str(nm), str(amu)))
     stocks.append((str(nm), int(amu)))
@@ -128,20 +98,7 @@ def deleteStock():
         stockTree.delete(item)
         stocks.pop(itemindex)
 
-def addBond(nm, amu):
-    bondTree.insert('', 'end', values=(str(nm), str(amu)))
-
-def deleteBond():
-    for item in reversed(bondTree.selection()):
-        itemindex = bondTree.index(item)
-        bondTree.delete(item)
-
-def setSavings(sav):
-    savingLabel.config(text = "Savings: $" + str(sav))
-
-def setInterest(interest):
-    interestLabel.config(text = "Interest: " + str(interest) + "%")
-
+#Entry fields for stock list
 stockAddButton = Button(stockFrame, text = "Add stock", command = lambda : addStock(stockNameEntry.get(), stockAmountEntry.get()))
 stockDeleteButton = Button(stockFrame, text = "Delete stock", command = deleteStock)
 
@@ -157,7 +114,31 @@ stockAddButton.pack()
 stockDeleteButton.pack()
 
 stockTree.pack()
+stockListFrame.pack()
 
+#List of bonds
+bondListFrame = LabelFrame(bondFrame, highlightthickness=0, borderwidth = 0)
+bondScroll = Scrollbar(bondListFrame, orient=VERTICAL)
+bondTree = ttk.Treeview(bondListFrame, column=("Name", "Amount"), show='headings', height=5, yscrollcommand= bondScroll.set, selectmode = EXTENDED)
+bondScroll.config(command = bondTree.yview)
+bondScroll.pack(side = RIGHT, fill= Y)
+
+bondTree.column("# 1", anchor=CENTER)
+bondTree.heading("# 1", text="Name")
+bondTree.column("# 2", anchor=CENTER)
+bondTree.heading("# 2", text="Amount")
+
+
+# Addition and deletion to bond list
+def addBond(nm, amu):
+    bondTree.insert('', 'end', values=(str(nm), str(amu)))
+
+def deleteBond():
+    for item in reversed(bondTree.selection()):
+        itemindex = bondTree.index(item)
+        bondTree.delete(item)
+
+#Entry fields for bond list
 bondAddButton = Button(bondFrame, text = "Add Bond", command = lambda : addBond(bondNameEntry.get(), bondAmountEntry.get()))
 bondDeleteButton = Button(bondFrame, text = "Delete Bond", command = deleteBond)
 
@@ -173,7 +154,16 @@ bondAddButton.pack()
 bondDeleteButton.pack()
 
 bondTree.pack()
+bondListFrame.pack()
 
+# Setting of Savings and Interest Labels
+def setSavings(sav):
+    savingLabel.config(text = "Savings: $" + str(sav))
+
+def setInterest(interest):
+    interestLabel.config(text = "Interest: " + str(interest) + "%")
+
+#Entry fields for Savings and Interest
 setSavingsButton = Button(savingFrame, text = "Set Savings", command = lambda : setSavings(savingsAmountEntry.get()))
 setInterestButton = Button(savingFrame, text = "Set Interest", command = lambda : setInterest(interestAmountEntry.get()))
 
@@ -187,18 +177,5 @@ interestAmountEntry.insert(0, "Enter Interest")
 
 setSavingsButton.pack()
 setInterestButton.pack()
-
-savingLabel.pack()
-interestLabel.pack()
-
-stockFrame.pack(side = TOP)
-riskStockFrame.pack(side = BOTTOM)
-stockBigFrame.pack(side = LEFT)
-bondFrame.pack(side = LEFT)
-savingFrame.pack(side= TOP)
-riskFrame.pack()
-
-stockListFrame.pack()
-bondListFrame.pack()
 
 root.mainloop()

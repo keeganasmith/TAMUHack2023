@@ -1,5 +1,4 @@
 
-
 def get_qual_risk(sharpe_denom):
     if sharpe_denom < .0260:
         return "Low"

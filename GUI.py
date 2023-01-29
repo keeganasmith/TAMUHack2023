@@ -56,14 +56,14 @@ def calcStock():
         # Changing of all Labels
         annReturnLabel.config(text = "Annualized Return: " + str("%.2f" % (ygrowth*100) ) + "%")
         sharpeRatioLabel.config(text = "Sharpe Ratio: " + str(sr))
-        excessReturnsLabel.config(text = "Excess Returns (in respect to S&P 500): " + str(er))
+        excessReturnsLabel.config(text = "Excess Returns (w.r.t S&P 500): " + str(er))
         performanceLabel.config(text = "Performance: " + perf)
         riskLabel.config(text = "Risk: " + rsk)
 
 #Labels and Buttons in riskStocksFrame
 annReturnLabel = Label(riskStockFrame, text= "Annualized Return:")
 sharpeRatioLabel = Label(riskStockFrame, text= "Sharpe Ratio:" )
-excessReturnsLabel = Label(riskStockFrame, text= "Excess Returns (in respect to S&P 500): " )
+excessReturnsLabel = Label(riskStockFrame, text= "Excess Returns (w.r.t respect to S&P 500): " )
 performanceLabel = Label(riskStockFrame, text= "Performance: " )
 riskLabel = Label(riskStockFrame, text= "Risk: " )
 calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock)
@@ -174,14 +174,15 @@ bondDeleteButton.pack()
 bondTree.pack()
 bondListFrame.pack()
 
-
+saving_amount = 0
+saving_interest = 0
 # Setting of Savings and Interest Labels
 def setSavings(sav):
     savingLabel.config(text = "Savings: $" + str(sav))
-
+    saving_amount = sav
 def setInterest(interest):
     interestLabel.config(text = "Interest: " + str(interest) + "%")
-
+    saving_interest = interest;
 #Entry fields for Savings and Interest
 setSavingsButton = Button(savingFrame, text = "Set Savings", command = lambda : setSavings(savingsAmountEntry.get()))
 setInterestButton = Button(savingFrame, text = "Set Interest", command = lambda : setInterest(interestAmountEntry.get()))
@@ -197,4 +198,8 @@ interestAmountEntry.insert(0, "Enter Interest")
 setSavingsButton.pack()
 setInterestButton.pack()
 
+def calculateTotal():
+    return 0
+setCalculateTotalButton = Button(savingFrame, text = "Calculate Total", command = lambda : calculateTotal())
+setCalculateTotalButton.pack()
 root.mainloop()

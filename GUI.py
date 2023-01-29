@@ -55,16 +55,22 @@ def calcStock():
         # if(timeChoice.get() == "5 Years"):
         #      ftime = '5y'
         #print("Ftime: ", ftime)
-        sr, er = rk.sharpe(stocks)
+        sr, er, rsk, perf = rk.sharpe(stocks)
         ygrowth = yahoo.get_Total_Avg_Yearly_Growth(stocks)
         annReturnLabel.config(text = "Annualized Return: " + str("%.2f" % (ygrowth*100) ) + "%")
         sharpeRatioLabel.config(text = "Sharpe Ratio: " + str(sr))
         excessReturnsLabel.config(text = "Excess Returns (in respect to S&P 500): " + str(er))
+        performanceLabel.config(text = "Performance: " + perf)
+        riskLabel.config(text = "Risk: " + rsk)
+
+
 
     
 annReturnLabel = Label(riskStockFrame, text= "Annualized Return:")
 sharpeRatioLabel = Label(riskStockFrame, text= "Sharpe Ratio:" )
 excessReturnsLabel = Label(riskStockFrame, text= "Excess Returns (in respect to S&P 500): " )
+performanceLabel = Label(riskStockFrame, text= "Performance: " )
+riskLabel = Label(riskStockFrame, text= "Risk: " )
 
 
 calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock)
@@ -72,6 +78,8 @@ calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock
 annReturnLabel.pack()
 sharpeRatioLabel.pack()
 excessReturnsLabel.pack()
+riskLabel.pack()
+performanceLabel.pack()
 #timeMenu.pack()
 calculateButton.pack()
 

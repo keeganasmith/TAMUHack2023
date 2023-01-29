@@ -5,6 +5,7 @@ import risk as rk
 import bonds_risk as br
 import stock_growth
 import total_growth
+import generate_portfolio as gp
 # Creation of root window and stock array
 root = Tk()
 stocks = []
@@ -32,17 +33,17 @@ riskFrame = LabelFrame(root)
 #Positioning of frames into grid
 stockFrame.grid(row=0,column=0, rowspan = 2, sticky= "NSEW")
 bondFrame.grid(row=0,column=1, rowspan = 2, sticky= "NSEW")
-savingFrame.grid(row=0, column = 2, rowspan= 2, sticky = "NSEW")
+savingFrame.grid(row=0, column = 2, sticky = "NSEW")
 riskStockFrame.grid(row=2, column = 0, sticky = "NSEW")
 riskBondFrame.grid(row=2, column = 1, sticky = "NSEW")
-riskFrame.grid(row=2, column = 2, sticky = "NSEW")
+riskFrame.grid(row=1, column = 2, rowspan = 2, sticky = "NSEW")
 
 # Savings and Interest Label in Saving Frame
 savingLabel = Label(savingFrame, text= "Savings: $0")
 interestLabel = Label(savingFrame, text= "Interest: 0%")
 
-savingLabel.pack()
-interestLabel.pack()
+savingLabel.grid(row = 2, column = 0)
+interestLabel.grid(row = 2, column = 1)
 
 # Risk and Growth Label in Risk Frame
 growthLabel = Label(riskFrame, text= "Expected Annual Growth (taking risk into account): ")
@@ -57,11 +58,11 @@ def calcStock():
         # ygrowth = yahoo.get_Total_Avg_Yearly_Growth(stocks)
         sharpe = sr
         # Changing of all Labels
-        sharpeRatioLabel.config(text = "Sharpe Ratio (w.r.t S&P 500): " + str(sr))
-        excessReturnsLabel.config(text = "Excess Returns (w.r.t S&P 500): " + str(er))
+        sharpeRatioLabel.config(text = "Sharpe Ratio (w.r.t S&P 500): %.2f" % sr)
+        excessReturnsLabel.config(text = "Excess Returns (w.r.t S&P 500): %.2f" % er)
         performanceLabel.config(text = "Performance: " + perf)
         riskLabel.config(text = "Risk: " + rsk)
-        annReturnLabel.config(text = "Expected Growth Accounting for Risk Factors: " + str(stock_growth.bruh(sharpe) * 100) + "%")
+        annReturnLabel.config(text = "Expected Growth Accounting for Risk Factors: %.2f" % (stock_growth.bruh(sharpe) * 100) + "%")
 
 
 #Labels and Buttons in riskStocksFrame
@@ -110,31 +111,31 @@ def deleteStock():
 stockAddButton = Button(stockFrame, text = "Add stock", command = lambda : addStock(stockNameEntry.get(), stockAmountEntry.get()))
 stockDeleteButton = Button(stockFrame, text = "Delete stock", command = deleteStock)
 
-Grid.rowconfigure(stockFrame,0,weight=1)
+Grid.rowconfigure(stockFrame,0,weight=4)
 Grid.columnconfigure(stockFrame,0,weight=1)
-Grid.rowconfigure(stockFrame,1,weight=1)
+Grid.rowconfigure(stockFrame,1,weight=4)
 Grid.columnconfigure(stockFrame,1,weight=1)
 
 
 stockNameLabel = Label(stockFrame, text = "Stock Name: ")
-stockNameLabel.grid(row = 0, column = 0)
+stockNameLabel.grid(row = 0, column = 0, sticky= "EW")
 
 stockNameEntry = Entry(stockFrame, width = 18)
-stockNameEntry.grid(row = 0, column = 1)
+stockNameEntry.grid(row = 0, column = 1, sticky= "EW")
 stockNameEntry.insert(0, "Enter Stock name")
 
 stockAmountLabel = Label(stockFrame, text = "Stock Amount: ")
-stockAmountLabel.grid(row = 1, column = 0)
+stockAmountLabel.grid(row = 1, column = 0, sticky= "EW")
 
 stockAmountEntry = Entry(stockFrame, width = 18)
-stockAmountEntry.grid(row = 1, column = 1)
+stockAmountEntry.grid(row = 1, column = 1, sticky= "EW")
 stockAmountEntry.insert(0, "Enter Stock amount")
 
-stockAddButton.grid(row = 2, column = 0)
-stockDeleteButton.grid(row = 2, column = 1)
+stockAddButton.grid(row = 2, column = 0, sticky= "EW")
+stockDeleteButton.grid(row = 2, column = 1, sticky= "EW")
 
 stockTree.pack()
-stockListFrame.grid(row = 3, column = 0, columnspan = 3)
+stockListFrame.grid(row = 3, column = 0, columnspan = 3, sticky= "NSEW")
 
 #List of bonds
 bondListFrame = LabelFrame(bondFrame, highlightthickness=0, borderwidth = 0)
@@ -175,17 +176,17 @@ securities = OptionMenu(bondFrame, sec, 'Treasury Bills', 'Treasury Notes', 'Tre
 'Treasury Inflation-Protected Securities (TIPS)', 'Treasury Floating Rate Notes (FRN)', 'Federal Financing Bank',
 'Special Purpose Vehicle', 'Foreign Series', 'State and Local Government Series', 'United States Savings Securities',
 'United States Savings Inflation Securities', 'Government Account Series', 'Government Account Series Inflation Securities')
-securities.pack()
+securities.grid(row = 0, column = 0)
 
 bondAmountEntry = Entry(bondFrame, width = 36)
-bondAmountEntry.pack()
+bondAmountEntry.grid(row = 0, column = 1)
 bondAmountEntry.insert(0, "Enter Bond amount")
 
-bondAddButton.pack()
-bondDeleteButton.pack()
+bondAddButton.grid(row = 1, column = 0)
+bondDeleteButton.grid(row = 1, column = 1)
 
 bondTree.pack()
-bondListFrame.pack()
+bondListFrame.grid(row = 2, column = 0, columnspan = 2)
 
 saving_amount = 0
 saving_interest = 0
@@ -201,15 +202,15 @@ setSavingsButton = Button(savingFrame, text = "Set Savings", command = lambda : 
 setInterestButton = Button(savingFrame, text = "Set Interest", command = lambda : setInterest(interestAmountEntry.get()))
 
 savingsAmountEntry = Entry(savingFrame, width = 36)
-savingsAmountEntry.pack()
+savingsAmountEntry.grid(row = 0, column = 0)
 savingsAmountEntry.insert(0, "Enter savings")
 
 interestAmountEntry = Entry(savingFrame, width = 36)
-interestAmountEntry.pack()
+interestAmountEntry.grid(row = 0, column = 1)
 interestAmountEntry.insert(0, "Enter Interest")
 
-setSavingsButton.pack()
-setInterestButton.pack()
+setSavingsButton.grid(row = 1, column = 0)
+setInterestButton.grid(row = 1, column = 1)
 
 def calculateTotal():
     sg = stock_growth.bruh(sharpe)
@@ -217,9 +218,61 @@ def calculateTotal():
     for i in range(0, len(stocks)):
         stock_amount += stocks[i][1]
     growth = total_growth.total_growth(stock_amount, sg, bond_amounts, bond_interests, saving_amount, saving_interest)
-    growthLabel.config(text = f"Expected Annual Growth (taking risk into account):\n{growth}%\n")
+    #growthLabel.config(text = f"Expected Annual Growth (taking risk into account):\n{growth}%\n")
+    growthLabel.config(text = "Expected Annual Growth (taking risk into account): %.2f" % growth + "%")
 
     return 0
-setCalculateTotalButton = Button(riskBondFrame, text = "Calculate Total", command = lambda : calculateTotal())
+
+#Ideal Portfolio List
+
+portListFrame = LabelFrame(riskBondFrame, highlightthickness=0, borderwidth = 0)
+portScroll = Scrollbar(portListFrame, orient=VERTICAL)
+portTree = ttk.Treeview(portListFrame, column=("Name", "Percentage"), show='headings', height=5, yscrollcommand= bondScroll.set, selectmode = EXTENDED)
+portScroll.config(command = portTree.yview)
+portScroll.pack(side = RIGHT, fill= Y)
+
+portTree.column("# 1", anchor=CENTER)
+portTree.heading("# 1", text="Name")
+portTree.column("# 2", anchor=CENTER)
+portTree.heading("# 2", text="Percentage")
+portListFrame.pack()
+portTree.pack()
+
+bestBondLabel = Label(riskBondFrame, text= "Bond Name: " )
+bbIRLabel = Label(riskBondFrame, text= "Bond's Interest Rate: " )
+bbAmuLabel = Label(riskBondFrame, text= "Bond's Percentage Total: " )
+teGRLabel = Label(riskBondFrame, text= "Total Expected Growth Rate: " )
+
+def portCalc():
+    port, grow = gp.get_best_portfolio()
+    sumPort = 0
+    for i in range(len(port)):
+        sumPort += port[i][1]
+
+    for i in range(len(port)):
+        portTree.insert('', 'end', values = (port[i][0], port[i][1]))
+        growthPortLabel.config(text = "Growth of Portfolio: " + str(grow*100))
+
+    bName, bInt = gp.get_max_bond()
+
+    bestBondLabel.config(text = "Bond Name: " + bName)
+    bbIRLabel.config(text = "Bond's Interest Rate: " + str(bInt) + "%")
+    bbAmuLabel.config(text = "Bond's Percentage Total: " + str(50) + "%")
+    teGRLabel.config(text = "Total Expected Growth Rate: %.2f" % ((bInt/2) + (grow*50)))
+    
+
+
+calcPortButton = Button(riskBondFrame, text = "Calculate Portfolio", command = portCalc)
+calcPortButton.pack()
+
+growthPortLabel = Label(riskBondFrame, text= "Growth of Portfolio: " )
+growthPortLabel.pack()
+
+bestBondLabel.pack()
+bbIRLabel.pack()
+bbAmuLabel.pack()
+teGRLabel.pack()
+
+setCalculateTotalButton = Button(riskFrame, text = "Calculate Total", command = lambda : calculateTotal())
 setCalculateTotalButton.pack()
 root.mainloop()

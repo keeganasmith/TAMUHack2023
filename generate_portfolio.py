@@ -20,7 +20,7 @@ def get_max_bond():
         if(float(data[i]['avg_interest_rate_amt']) > max_interest):
             max_interest = float(data[i]['avg_interest_rate_amt']);
             max_name = data[i]['security_desc']
-    return max_name
+    return [max_name, max_interest]
 # with open('nasdaq_screener_1675002051544.csv') as csv_file:
 #     csv_reader = csv.reader(csv_file, delimiter=',')
 #     line_count = 0
@@ -55,7 +55,7 @@ def get_best_portfolio(number = 5, num_stocks = 50):
             hq.heappush(joe, (growth, stock))
     output = []
     for tup in joe:
-        output.append([tup[1], 100])
+        output.append([tup[1], 10])
     return [output, stock_growth.bruh(risk.sharpe(output)[0])]
 
 

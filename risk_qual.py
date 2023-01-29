@@ -2,22 +2,22 @@
 
 def get_qual_risk(sharpe_denom):
     if sharpe_denom < .0260:
-        return "low risk"
+        return "Low"
     if sharpe_denom > .0335:
-        return "high risk"
+        return "High"
 
-    return "medium risk"
+    return "Medium"
 
 
 def get_qual_performance_risk(sharpe_value):
     if sharpe_value> 3:
-        return "excellent"
+        return "Excellent"
     if sharpe_value > 2:
-        return "very good"
+        return "Very good"
     if sharpe_value > .9:
-        return "good"
+        return "Good"
     if sharpe_value > 0:
-        return "mediocre"
+        return "Mediocre"
 
-    return "bad"
+    return "Bad"
 

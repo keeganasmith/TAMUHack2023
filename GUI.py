@@ -71,14 +71,14 @@ performanceLabel = Label(riskStockFrame, text= "Performance: " )
 riskLabel = Label(riskStockFrame, text= "Risk: " )
 annReturnLabel = Label(riskStockFrame, text= "Expected Growth Accounting for Risk Factors: ")
 
-calculateButton = Button(riskBondFrame, text = "Calculate", command = calcStock)
+calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock)
 
 sharpeRatioLabel.pack()
 excessReturnsLabel.pack()
 riskLabel.pack()
 performanceLabel.pack()
-annReturnLabel.pack()
 
+annReturnLabel.pack()
 calculateButton.pack()
 
 #List of stocks
@@ -220,6 +220,6 @@ def calculateTotal():
     growthLabel.config(text = f"Expected Annual Growth (taking risk into account):\n{growth}%\n")
 
     return 0
-setCalculateTotalButton = Button(savingFrame, text = "Calculate Total", command = lambda : calculateTotal())
+setCalculateTotalButton = Button(riskBondFrame, text = "Calculate Total", command = lambda : calculateTotal())
 setCalculateTotalButton.pack()
 root.mainloop()

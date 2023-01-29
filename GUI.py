@@ -71,13 +71,14 @@ performanceLabel = Label(riskStockFrame, text= "Performance: " )
 riskLabel = Label(riskStockFrame, text= "Risk: " )
 annReturnLabel = Label(riskStockFrame, text= "Expected Growth Accounting for Risk Factors: ")
 
-calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock)
+calculateButton = Button(riskBondFrame, text = "Calculate", command = calcStock)
 
-annReturnLabel.pack()
 sharpeRatioLabel.pack()
 excessReturnsLabel.pack()
 riskLabel.pack()
 performanceLabel.pack()
+annReturnLabel.pack()
+
 calculateButton.pack()
 
 #List of stocks

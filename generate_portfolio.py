@@ -31,7 +31,7 @@ def get_max_bond():
 #         else:
 #             symbols.append(row[0])
 
-def get_best_portfolio(number, num_stocks = 50):
+def get_best_portfolio(number = 5, num_stocks = 50):
     stocks = symbols.symbol;
 
     new_stocks = []
@@ -56,7 +56,8 @@ def get_best_portfolio(number, num_stocks = 50):
     output = []
     for tup in joe:
         output.append([tup[1], 100])
-    return output
-result = get_best_portfolio(10, 15);
-sharpe = risk.sharpe(result)[0]
-print(stock_growth.bruh(sharpe))
+    return [output, stock_growth.bruh(risk.sharpe(output)[0])]
+
+
+
+#print(get_best_portfolio())

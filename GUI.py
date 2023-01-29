@@ -119,7 +119,7 @@ stockListFrame.pack()
 #List of bonds
 bondListFrame = LabelFrame(bondFrame, highlightthickness=0, borderwidth = 0)
 bondScroll = Scrollbar(bondListFrame, orient=VERTICAL)
-bondTree = ttk.Treeview(bondListFrame, column=("Name", "Amount"), show='headings', height=5, yscrollcommand= bondScroll.set, selectmode = EXTENDED)
+bondTree = ttk.Treeview(bondListFrame, column=("Name", "Amount", "Interest Rate"), show='headings', height=5, yscrollcommand= bondScroll.set, selectmode = EXTENDED)
 bondScroll.config(command = bondTree.yview)
 bondScroll.pack(side = RIGHT, fill= Y)
 
@@ -127,11 +127,13 @@ bondTree.column("# 1", anchor=CENTER)
 bondTree.heading("# 1", text="Name")
 bondTree.column("# 2", anchor=CENTER)
 bondTree.heading("# 2", text="Amount")
+bondTree.column("# 2", anchor=CENTER)
+bondTree.heading("# 2", text="Interest Rate")
 
 
 # Addition and deletion to bond list
-def addBond(nm, amu):
-    bondTree.insert('', 'end', values=(str(nm), str(amu)))
+def addBond(nm, amu, ir):
+    bondTree.insert('', 'end', values=(str(nm), str(amu), str(ir)))
 
 def deleteBond():
     for item in reversed(bondTree.selection()):
@@ -139,12 +141,15 @@ def deleteBond():
         bondTree.delete(item)
 
 #Entry fields for bond list
-bondAddButton = Button(bondFrame, text = "Add Bond", command = lambda : addBond(bondNameEntry.get(), bondAmountEntry.get()))
+bondAddButton = Button(bondFrame, text = "Add Bond", command = lambda : addBond(sec.get(), bondAmountEntry.get()))
 bondDeleteButton = Button(bondFrame, text = "Delete Bond", command = deleteBond)
 
-bondNameEntry = Entry(bondFrame, width = 36)
-bondNameEntry.pack()
-bondNameEntry.insert(0, "Enter Bond name")
+sec = StringVar()
+securities = OptionMenu(bondFrame, sec, 'Treasury Bills', 'Treasury Notes', 'Treasury Bonds',
+'Treasury Inflation-Protected Securities (TIPS)', 'Treasury Floating Rate Notes (FRN)', 'Federal Financing Bank',
+'Special Purpose Vehicle', 'Foreign Series', 'State and Local Government Series', 'United States Savings Securities',
+'United States Savings Inflation Securities', 'Government Account Series', 'Government Account Series Inflation Securities')
+securities.pack()
 
 bondAmountEntry = Entry(bondFrame, width = 36)
 bondAmountEntry.pack()
@@ -155,6 +160,7 @@ bondDeleteButton.pack()
 
 bondTree.pack()
 bondListFrame.pack()
+
 
 # Setting of Savings and Interest Labels
 def setSavings(sav):

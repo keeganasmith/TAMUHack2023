@@ -73,7 +73,7 @@ def sharpe(portfolio, period = '5y'):
     #print(f"average excess returns: {average_excess_returns}")
     #print(f"excess return sd: {excess_returns_sd}")
     sharpe_ratio = average_excess_returns/excess_returns_sd * (len(excess_return_list)) ** .5;
-    return sharpe_ratio
+    return [sharpe_ratio, excess_returns_sd]
 #sharpe(['aapl'])
 portfolio1 = [
     ['aapl', 500],

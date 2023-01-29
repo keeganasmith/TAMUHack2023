@@ -8,22 +8,20 @@ stocks = []
 
 #root.geometry("%dx%d" % (root.winfo_screenwidth(), root.winfo_screenheight()))
 
-root.geometry("1920x1080")
+# root.geometry("1920x1080")
 
 enterFrame = LabelFrame(root, highlightthickness=0, borderwidth = 0)
 enterFrame.pack()
 
-wdth = root.winfo_width()
-hght = root.winfo_height()
+# wdth = root.winfo_width()
+# hght = root.winfo_height()
 
-print(wdth)
-print(hght)
+# print(wdth)
+# print(hght)
 
-
-# wdth = root.winfo_screenwidth()
-# hght = root.winfo_screenheight()
-
-# root.geometry("%dx%d" % (wdth, hght))
+wdth = root.winfo_screenwidth()
+hght = root.winfo_screenheight()
+root.geometry("%dx%d" % (wdth, hght))
 
 #root.update_idletasks()
 #print(wdth)
@@ -42,33 +40,39 @@ interestLabel = Label(savingFrame, text= "Interest: 0%")
 riskLabel = Label(riskFrame, text= "Risk:")
 growthLabel = Label(riskFrame, text= "Growth:")
 
+#timeChoice = StringVar()
+#timeMenu = OptionMenu(riskStockFrame, timeChoice, "6 Months", "1 Year", "2 Years", "5 Years")
 
 def calcStock():
     ftime = ""
     if(len(stocks)!= 0):
-        if(timeChoice == "6 Months"):
-             ftime = "6mo"
-        if(timeChoice == "1 Year"):
-             ftime = "1y"
-        if(timeChoice == "2 Years"):
-             ftime = "2y"
-        if(timeChoice == "5 Years"):
-             ftime = "5y"
+        # if(timeChoice.get() == "6 Months"):
+        #      ftime = '6mo'
+        # if(timeChoice.get() == "1 Year"):
+        #      ftime = '1y'
+        # if(timeChoice.get() == "2 Years"):
+        #      ftime = '2y'
+        # if(timeChoice.get() == "5 Years"):
+        #      ftime = '5y'
+        #print("Ftime: ", ftime)
+        sr, er = rk.sharpe(stocks)
         ygrowth = yahoo.get_Total_Avg_Yearly_Growth(stocks)
         annReturnLabel.config(text = "Annualized Return: " + str("%.2f" % (ygrowth*100) ) + "%")
-        sharpeRatioLabel.config(text = "Sharpe Ratio: " + str("%.2f" % (rk.sharpe(stocks))))
+        sharpeRatioLabel.config(text = "Sharpe Ratio: " + str(sr))
+        excessReturnsLabel.config(text = "Excess Returns (in respect to S&P 500): " + str(er))
+
     
 annReturnLabel = Label(riskStockFrame, text= "Annualized Return:")
 sharpeRatioLabel = Label(riskStockFrame, text= "Sharpe Ratio:" )
+excessReturnsLabel = Label(riskStockFrame, text= "Excess Returns (in respect to S&P 500): " )
 
-timeChoice = StringVar()
-timeMenu = OptionMenu(riskStockFrame, timeChoice, "6 Months", "1 Year", "2 Years", "5 Years")
 
 calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock)
 
 annReturnLabel.pack()
 sharpeRatioLabel.pack()
-timeMenu.pack()
+excessReturnsLabel.pack()
+#timeMenu.pack()
 calculateButton.pack()
 
 riskLabel.pack()
@@ -78,7 +82,7 @@ stockListFrame = LabelFrame(stockFrame, highlightthickness=0, borderwidth = 0)
 
 stockBigFrame.pack_propagate(False)
 stockFrame.pack_propagate(False)
-riskStockFrame.pack_propagate(False)
+riskStockFrame.pack_propagate(False)    
 bondFrame.pack_propagate(False)
 savingFrame.pack_propagate(False)
 riskFrame.pack_propagate(False)
@@ -112,7 +116,7 @@ def addStock(nm, amu):
 def deleteStock():
     for item in reversed(stockTree.selection()):
         itemindex = stockTree.index(item)
-        print(itemindex)
+        #print(itemindex)
         stockTree.delete(item)
         stocks.pop(itemindex)
 

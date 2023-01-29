@@ -28,7 +28,7 @@ def get_Avg_Yearly_Growth(tickerSymbol, time_period = "10y"):
     return average_growth
 
 
-def get_Total_Avg_Yearly_Growth(list_items):
+def get_Total_Avg_Yearly_Growth(list_items, time_period):
     #calculate percentage for each stock based on total
 
     percentage_list = list(range(len(list_items)))
@@ -43,7 +43,7 @@ def get_Total_Avg_Yearly_Growth(list_items):
     total_growth = 0
 
     for i in range(len(list_items)):
-        total_growth += get_Avg_Yearly_Growth(list_items[i][0])*percentage_list[i]
+        total_growth += get_Avg_Yearly_Growth(list_items[i][0], time_period)*percentage_list[i]
 
     return total_growth
 

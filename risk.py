@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas
 import numpy as np
+import risk_qual
 PERIOD_1 = "5y"
 def standard_deviation(list, average):
     sum = 0.0
@@ -73,7 +74,13 @@ def sharpe(portfolio, period = '5y'):
     #print(f"average excess returns: {average_excess_returns}")
     #print(f"excess return sd: {excess_returns_sd}")
     sharpe_ratio = average_excess_returns/excess_returns_sd * (len(excess_return_list)) ** .5;
-    return [sharpe_ratio, excess_returns_sd]
+
+    #call qual function
+    risk_quality = risk_qual.get_qual_risk(excess_returns_sd)
+    performance_quality = risk_qual.get_qual_performance_risk(sharpe_ratio)
+
+    #return both items in list
+    return [sharpe_ratio, excess_returns_sd, risk_quality, performance_quality]
 #sharpe(['aapl'])
 portfolio1 = [
     ['aapl', 500],
@@ -81,5 +88,5 @@ portfolio1 = [
     ['msft', 200],
     ['tsla', 100]
     ]
-sharpe(portfolio1)
+#sharpe(portfolio1)
 #ticker = yf.Ticker('aapl')

@@ -193,10 +193,10 @@ saving_interest = 0
 # Setting of Savings and Interest Labels
 def setSavings(sav):
     savingLabel.config(text = "Savings: $" + str(sav))
-    saving_amount = sav
+    saving_amount = float(sav)
 def setInterest(interest):
     interestLabel.config(text = "Interest: " + str(interest) + "%")
-    saving_interest = interest;
+    saving_interest = float(interest);
 #Entry fields for Savings and Interest
 setSavingsButton = Button(savingFrame, text = "Set Savings", command = lambda : setSavings(savingsAmountEntry.get()))
 setInterestButton = Button(savingFrame, text = "Set Interest", command = lambda : setInterest(interestAmountEntry.get()))
@@ -217,6 +217,12 @@ def calculateTotal():
     stock_amount= 0;
     for i in range(0, len(stocks)):
         stock_amount += stocks[i][1]
+
+    saving_amount = savingsAmountEntry.get()
+    saving_interest = interestAmountEntry.get()
+
+    #print(saving_amount)
+    #print(saving_interest)
     growth = total_growth.total_growth(stock_amount, sg, bond_amounts, bond_interests, saving_amount, saving_interest)
     #growthLabel.config(text = f"Expected Annual Growth (taking risk into account):\n{growth}%\n")
     growthLabel.config(text = "Expected Annual Growth (taking risk into account): %.2f" % growth + "%")

@@ -12,6 +12,8 @@ stocks = []
 bond_amounts = []
 bond_interests = []
 sharpe = 1
+
+root.title("Joe's Portfolio Risk Analysis")
 # Shrinking and growing speed of rows and columns
 Grid.rowconfigure(root,0,weight=1)
 Grid.columnconfigure(root,0,weight=2)

@@ -1,29 +1,39 @@
 from tkinter import *
 from tkinter import ttk
+import yahoo_functions as yahoo
+import risk as rk
 
 root = Tk()
-
 stocks = []
 
-# root.geometry("%dx%d" % (root.winfo_screenwidth(), root.winfo_screenheight()))
+#root.geometry("%dx%d" % (root.winfo_screenwidth(), root.winfo_screenheight()))
 
-# wdth = root.winfo_width()
-# hght = root.winfo_height()
+root.geometry("1920x1080")
+
+enterFrame = LabelFrame(root, highlightthickness=0, borderwidth = 0)
+enterFrame.pack()
+
+wdth = root.winfo_width()
+hght = root.winfo_height()
+
+print(wdth)
+print(hght)
 
 
-wdth = root.winfo_screenwidth()
-hght = root.winfo_screenheight()
+# wdth = root.winfo_screenwidth()
+# hght = root.winfo_screenheight()
 
-root.geometry("%dx%d" % (wdth, hght))
+# root.geometry("%dx%d" % (wdth, hght))
 
 #root.update_idletasks()
 #print(wdth)
 #print(hght)
 
-enterFrame = LabelFrame(root, highlightthickness=0, borderwidth = 0)
-stockFrame = LabelFrame(enterFrame, height= hght, width= wdth/3)
+stockBigFrame = LabelFrame(enterFrame, height= hght, width= wdth/3)
+stockFrame = LabelFrame(stockBigFrame, height= 4*hght/5, width= wdth/3)
 bondFrame = LabelFrame(enterFrame, height= hght, width= wdth/3)
 savingFrame = LabelFrame(enterFrame, height= 4*hght/5, width= wdth/3)
+riskStockFrame = LabelFrame(stockBigFrame, height= hght/5, width= wdth/3)
 riskFrame = LabelFrame(enterFrame, height= hght/5, width= wdth/3)
 
 savingLabel = Label(savingFrame, text= "Savings: $0")
@@ -32,12 +42,43 @@ interestLabel = Label(savingFrame, text= "Interest: 0%")
 riskLabel = Label(riskFrame, text= "Risk:")
 growthLabel = Label(riskFrame, text= "Growth:")
 
+
+def calcStock():
+    ftime = ""
+    if(len(stocks)!= 0):
+        if(timeChoice == "6 Months"):
+             ftime = "6mo"
+        if(timeChoice == "1 Year"):
+             ftime = "1y"
+        if(timeChoice == "2 Years"):
+             ftime = "2y"
+        if(timeChoice == "5 Years"):
+             ftime = "5y"
+        ygrowth = yahoo.get_Total_Avg_Yearly_Growth(stocks)
+        annReturnLabel.config(text = "Annualized Return: " + str("%.2f" % (ygrowth*100) ) + "%")
+        sharpeRatioLabel.config(text = "Sharpe Ratio: " + str("%.2f" % (rk.sharpe(stocks))))
+    
+annReturnLabel = Label(riskStockFrame, text= "Annualized Return:")
+sharpeRatioLabel = Label(riskStockFrame, text= "Sharpe Ratio:" )
+
+timeChoice = StringVar()
+timeMenu = OptionMenu(riskStockFrame, timeChoice, "6 Months", "1 Year", "2 Years", "5 Years")
+
+calculateButton = Button(riskStockFrame, text = "Calculate", command = calcStock)
+
+annReturnLabel.pack()
+sharpeRatioLabel.pack()
+timeMenu.pack()
+calculateButton.pack()
+
 riskLabel.pack()
 growthLabel.pack()
 
 stockListFrame = LabelFrame(stockFrame, highlightthickness=0, borderwidth = 0)
 
+stockBigFrame.pack_propagate(False)
 stockFrame.pack_propagate(False)
+riskStockFrame.pack_propagate(False)
 bondFrame.pack_propagate(False)
 savingFrame.pack_propagate(False)
 riskFrame.pack_propagate(False)
@@ -66,8 +107,7 @@ bondTree.heading("# 2", text="Amount")
 
 def addStock(nm, amu):
     stockTree.insert('', 'end', values=(str(nm), str(amu)))
-    stocks.append((str(nm), amu))
-   # print(stocks)
+    stocks.append((str(nm), int(amu)))
 
 def deleteStock():
     for item in reversed(stockTree.selection()):
@@ -75,13 +115,13 @@ def deleteStock():
         print(itemindex)
         stockTree.delete(item)
         stocks.pop(itemindex)
-   # print(stocks)
 
 def addBond(nm, amu):
     bondTree.insert('', 'end', values=(str(nm), str(amu)))
 
 def deleteBond():
-    for item in reversed(bondTree.curselection()):
+    for item in reversed(bondTree.selection()):
+        itemindex = bondTree.index(item)
         bondTree.delete(item)
 
 def setSavings(sav):
@@ -89,7 +129,6 @@ def setSavings(sav):
 
 def setInterest(interest):
     interestLabel.config(text = "Interest: " + str(interest) + "%")
-
 
 stockAddButton = Button(stockFrame, text = "Add stock", command = lambda : addStock(stockNameEntry.get(), stockAmountEntry.get()))
 stockDeleteButton = Button(stockFrame, text = "Delete stock", command = deleteStock)
@@ -140,8 +179,9 @@ setInterestButton.pack()
 savingLabel.pack()
 interestLabel.pack()
 
-enterFrame.pack()
-stockFrame.pack(side = LEFT)
+stockFrame.pack(side = TOP)
+riskStockFrame.pack(side = BOTTOM)
+stockBigFrame.pack(side = LEFT)
 bondFrame.pack(side = LEFT)
 savingFrame.pack(side= TOP)
 riskFrame.pack()

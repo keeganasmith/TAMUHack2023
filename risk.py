@@ -3,6 +3,7 @@ import pandas
 import numpy as np
 import risk_qual
 PERIOD_1 = "5y"
+sp_day_to_day = 0.0
 def standard_deviation(list, average):
     sum = 0.0
     for i in range(0, len(list)):
@@ -19,6 +20,7 @@ def day_to_day_change_list(list):
     for i in range(1, len(list)):
         result[i] = (list[i] - list[i-1])/list[i-1]
     return result;
+
 def day_to_day_change(stock):
     ticker = yf.Ticker(stock)
     history = ticker.history(period = PERIOD_1)
@@ -35,12 +37,16 @@ def day_to_day_change(stock):
         i += 1
         prev = val[4]
     return result
+sp_day_to_day = day_to_day_change('^GSPC')
 
 def get_total(portfolio):
     result = [0]*len(yf.Ticker(portfolio[0][0]).history(period = PERIOD_1).to_records() )
     total_amount = 0.0;
     min_index = len(result) - 1
+
     for val in portfolio:
+        if(len(val) < 2):
+            raise Exception("Stock DNE")
         total_amount += val[1]
     for stock in portfolio:
         ticker = yf.Ticker(stock[0])
@@ -66,7 +72,6 @@ def excess_returns(a, b):
 #returns the sharpe value relative to the S&P 500
 def sharpe(portfolio, period = '2y'):
     PERIOD_1 = period
-    sp_day_to_day = day_to_day_change('^GSPC')
     # print(average(result))
     portfolio_totals = get_total(portfolio)
     portfolio_day_to_day = day_to_day_change_list(portfolio_totals)

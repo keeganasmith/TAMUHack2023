@@ -1,27 +1,13 @@
-import pandas as pd
 import requests
-import json
 
-api_url = 'https://api.bls.gov/publicAPI/v2/timeseries/data/'
-
-# API key in config.py which contains: bls_key = 'key'
 import keys
-key = '?registrationkey={}'.format(keys.unemployment_api_key)
+
+api_url = 'https://api.api-ninjas.com/v1/country?name=United States'
+response = requests.get(api_url, headers={'X-Api-Key': keys.ninja_api_key_will}).json()
 
 
-#data = requests.get('https://api.bls.gov/publicAPI/v2/timeseries/data/').json()
+print(response[0]['unemployment'])
 
-#print(data)
+unemployment_rate = response[0]['unemployment']/100
 
-#import requests
-#import json
-data = json.dumps({"seriesid": ['CUUR0000SA0','SUUR0000SA0'],"startyear":"2021", "endyear":"2023"})
-
-
-p = requests.post(
-        '{}{}'.format('https://api.bls.gov/publicAPI/v2/timeseries/data/', key), 
-        headers={'Content-type': 'application/json'}, 
-        data=data).json()
-
-print(p)
-    
+print(unemployment_rate)

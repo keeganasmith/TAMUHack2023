@@ -7,7 +7,7 @@ import risk
 import stock_growth
 seconds = time.time()
 current_date = time.localtime(seconds);
-month = ((current_date.tm_mon - 2) % 12) + 1
+month = ((current_date.tm_mon - 4) % 12) + 1
 year = current_date.tm_year
 if(month == 12):
     year -= 1
@@ -33,7 +33,7 @@ def get_max_bond():
 
 def get_best_portfolio(number = 5, num_stocks = 50):
     stocks = symbols.symbol;
-
+    #print(len(stocks))
     new_stocks = []
     joe = []
     i = 0;
@@ -60,4 +60,4 @@ def get_best_portfolio(number = 5, num_stocks = 50):
 
 
 
-#print(get_best_portfolio())
+get_best_portfolio()
